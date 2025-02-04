@@ -8,12 +8,14 @@ namespace MyRPG
 {
     public interface CharacterInteface
     {
-        int Level { get; }
+        int Level { get; set; }
         string Name { get; }
         int Attack { get; }
         int Armor { get; }
         int Health { get; }
         bool IsDead { get; }
+        int Gold { get; set; }
+
         void TakeDamage(int damage);
     }
     public class Warrior : CharacterInteface, Item
@@ -50,6 +52,7 @@ namespace MyRPG
         public int Attack => new Random().Next(10, 20);
         public int Armor { get; set; }
         public int Health { get; set; }
+        public int Gold { get; set; }
         public bool IsDead => Health <= 0;
         public Monster(string _name, int _health)
         {
@@ -81,7 +84,7 @@ namespace MyRPG
 }
 public interface Item
 {
-    void Use(Warrior warrior)
+    void Use(CharacterInteface warrior)
     {
 
     }
@@ -155,6 +158,9 @@ public class Stage
 
             case 2:
                 Console.WriteLine("체력 포션을 마십니다.");
+                Console.Write($"체력이 {_warrior.Health}에서");
+                _heathpotion.Use(_warrior);
+                Console.Write($"{_warrior.Health}로 증가합니다.");
 
                 break;
 
@@ -194,7 +200,7 @@ public class Stage
         switch (Choice)
         {
             case 1:
-                //_warrior.Gold; 
+                _warrior.Gold += 100;
                 break;
 
             case 2:
