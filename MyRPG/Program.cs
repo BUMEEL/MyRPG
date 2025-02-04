@@ -31,6 +31,7 @@ namespace MyRPG
             Name = name;
             Health = 100;
             Attack = 10;
+            Gold = 0;
         }
         public void TakeDamage(int damage)
         {
@@ -99,13 +100,6 @@ public class StrengthPotion : Item
         warrior.Attack += 10;
     }
 }
-
-public class World
-{
-    public int WorldIndex { get; set; }
-    public string Name { get; set; }
-}
-
 public class Stage
 {
     public CharacterInteface _warrior;
@@ -118,7 +112,7 @@ public class Stage
     {
         this._warrior = _REF_warrior;
         this._monster = _REF_monster;
-        this._item = _REF_item;        
+        this._item = _REF_item;
     }
     public void Start()
     {
@@ -138,7 +132,7 @@ public class Stage
             {
                 StageClear();
                 Console.WriteLine($"{_monster.Name}을 처치하였습니다!");
-                //break;  // 몬스터가 죽었다면 턴 종료
+                break;  // 몬스터가 죽었다면 턴 종료
             }
 
             // 몬스터의 턴
@@ -161,9 +155,9 @@ public class Stage
 
             case 2:
                 Console.WriteLine("체력 포션을 마십니다.");
-                
+
                 break;
-                                
+
             case 3:
                 Console.WriteLine("강화 포션을 마십니다.");
 
@@ -175,35 +169,36 @@ public class Stage
         }
     }
 
-    void MonsterFSM()
+    void MonsterBHV()
     {
+        int _warriorBHV = int.Parse(Console.ReadLine());
+        switch (_warriorBHV)
+        {
+            case 1:
+                Console.WriteLine("공격을 선택하셨습니다.");
+                _monster.TakeDamage(_warrior.Attack);
+                break;
 
+            case 2:
+                Console.WriteLine("체력 포션을 마십니다.");
+
+                break;
+        }
     }
-
     void StageClear()
     {
-        Console.WriteLine("스테이지를 클리어 하였습니다 \n여행지를 선택합니다.");
-        Console.ReadLine();
-    }
-}
-
-public class Town
-{
-    public string Name = "Map";
-    public void GoTO(int GoToIndex)
-    {
-        switch (GoToIndex)
+        _warrior.Level++;
+        Console.WriteLine("스테이지를 클리어 하였습니다 \n마을로 돌아갑니다.");
+        Console.WriteLine("1번 : 1000골드\n2번 : 포션 10개 ");
+        int Choice = int.Parse(Console.ReadLine());
+        switch (Choice)
         {
             case 1:
-                Console.WriteLine(GoToIndex);
+                //_warrior.Gold; 
                 break;
 
             case 2:
-                Console.WriteLine(GoToIndex);
-                break;
 
-            case 3:
-                Console.WriteLine(GoToIndex);
                 break;
 
             default:
@@ -211,32 +206,6 @@ public class Town
         }
     }
 }
-
-public class Dungeon
-{
-    public string Name { get; set; }
-    public void GoTO(int GoToIndex)
-    {
-        switch (GoToIndex)
-        {
-            case 1:
-
-                break;
-
-            case 2:
-                Console.WriteLine(GoToIndex);
-                break;
-
-            case 3:
-                Console.WriteLine(GoToIndex);
-                break;
-
-            default:
-                break;
-        }
-    }
-}
-
 internal class Program
 {
     static void Main(string[] args)
@@ -254,7 +223,7 @@ internal class Program
 
         void EnterTown()
         {
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.\r\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\r\n\r\n1. 상태 보기\r\n2. 인벤토리\r\n3. 상점\r\n\r\n원하시는 행동을 입력해주세요.\r\n>>");
+            Console.WriteLine("===================================\n스파르타 마을에 오신 여러분 환영합니다.\r\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\r\n\r\n1. 상태 보기\r\n2. 인벤토리\r\n3. 상점\r\n\r\n원하시는 행동을 입력해주세요.\r\n>>");
             GoTo(int.Parse(Console.ReadLine()));
         }
 
