@@ -200,7 +200,9 @@ public class Stage // 스테이지 클래스
     }
     void StageClear() // 스테이지 클리어 시 레벨, 보상획득
     {
+        Console.Write($"플레이어의 레벨이\n{_warrior.Level}에서");
         _warrior.Level++;
+        Console.WriteLine($"{_warrior.Level}로 증가합니다.");
         Console.WriteLine("스테이지를 클리어 하였습니다 \n마을로 돌아갑니다.");
         Console.WriteLine("1번 : 1000골드\n2번 : 포션 10개 ");
         int Choice = int.Parse(Console.ReadLine());
