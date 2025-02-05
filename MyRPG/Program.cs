@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 
 namespace MyRPG
@@ -10,15 +11,15 @@ namespace MyRPG
     {
         int Level { get; set; }
         string Name { get; }
-        int Attack { get; }
+        int Attack { get; set; }
         int Armor { get; }
-        int Health { get; }
+        int Health { get; set; }
         bool IsDead { get; }
         int Gold { get; set; }
 
         void TakeDamage(int damage);
     }
-    public class Warrior : CharacterInteface, Item
+    public class Warrior : CharacterInteface
     {
         public int Level { get; set; }
         public string Name { get; }
@@ -49,7 +50,12 @@ namespace MyRPG
     {
         public int Level { get; set; }
         public string Name { get; }
-        public int Attack => new Random().Next(10, 20);
+        public int Attack
+        {
+            get => new Random().Next(10, 20);
+            set  => new Random().Next(10, 20);
+        }
+
         public int Armor { get; set; }
         public int Health { get; set; }
         public int Gold { get; set; }
@@ -71,6 +77,10 @@ namespace MyRPG
                 Console.WriteLine(Name + "가 사망했습니다.");
             }
         }
+        public void use()
+        {
+
+        }
     }
 
     public class Goblin : Monster
@@ -84,21 +94,18 @@ namespace MyRPG
 }
 public interface Item
 {
-    void Use(CharacterInteface warrior)
-    {
-
-    }
+    void Use(CharacterInteface warrior);
 }
 public class HealthPotion : Item
 {
-    void Use(Warrior warrior)
+    public void Use(CharacterInteface warrior)
     {
         warrior.Health += 10;
     }
 }
 public class StrengthPotion : Item
 {
-    void Use(Warrior warrior)
+    public  void Use(CharacterInteface warrior)
     {
         warrior.Attack += 10;
     }
@@ -148,6 +155,7 @@ public class Stage
 
     void PlayerTurn()
     {
+        Console.WriteLine("\n행동을 선택해주세요.\n1번 : 공격\n2번 : 체력 포션\n3번 : 강화 포션");
         int _warriorBHV = int.Parse(Console.ReadLine());
         switch (_warriorBHV)
         {
@@ -222,6 +230,8 @@ internal class Program
 
         List<Item> stage1Rewards = new List<Item> { new HealthPotion(), new StrengthPotion() };
         List<Item> stage2Rewards = new List<Item> { new StrengthPotion(), new HealthPotion() };
+        List<Item> stage3Rewards = new List<Item> { new StrengthPotion(), new HealthPotion() };
+        List<Item> stage4Rewards = new List<Item> { new StrengthPotion(), new HealthPotion() };
 
         Stage _stage = new Stage(_warriror, _goblin, stage1Rewards);
 
@@ -229,8 +239,8 @@ internal class Program
 
         void EnterTown()
         {
-            Console.WriteLine("===================================\n스파르타 마을에 오신 여러분 환영합니다.\r\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\r\n\r\n1. 상태 보기\r\n2. 인벤토리\r\n3. 상점\r\n\r\n원하시는 행동을 입력해주세요.\r\n>>");
-            GoTo(int.Parse(Console.ReadLine()));
+            Console.WriteLine("===================================\n스파르타 마을에 오신 여러분 환영합니다.\r\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\r\n\r\n1. 상태 보기\r\n2. 인벤토리\r\n3. 상점\n이상한 입력을 하시면 던전으로 추방합니다.\r\n\r\n원하시는 행동을 입력해주세요.\r\n>>");
+                GoTo(int.Parse(Console.ReadLine()));
         }
 
         void GoTo(int _GoToIndex)
@@ -256,11 +266,29 @@ internal class Program
                 default:
                     Console.WriteLine("틀린 선택입니다.");
                     Console.WriteLine("\n나쁜아이는 상범 아저씨가 던전으로 데려갑니다.");
-                    EnterDungeon();
+                    EnterDungeon(_warriror.Level);
                     break;
             }
-            void EnterDungeon()
+            void EnterDungeon(int PLV)
             {
+                switch (PLV)
+                {
+                    case 1:
+                        _stage = new Stage(_warriror, _goblin, stage1Rewards);
+                        break;
+                    case 2:
+                        _stage = new Stage(_warriror, _dragon, stage2Rewards);
+                        break;
+                    case 3:
+                        _stage = new Stage(_warriror, _goblin, stage3Rewards);
+                        break;
+                    case 4:
+                        _stage = new Stage(_warriror, _goblin, stage4Rewards);
+                        break;
+
+                    default:
+                        break;
+                }
                 _stage.Start();
                 EnterTown();
             }
